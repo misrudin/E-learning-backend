@@ -1,33 +1,34 @@
-const gurumodels = require("../models/guru");
+const siswamodels = require("../models/siswa");
 const helpers = require("../helpers/helpers");
 const conn = require("../configs/db");
 const bcrypt = require("bcryptjs");
 module.exports = {
-  getguru: (req, res) => {
-    gurumodels
-      .getguru()
+  getsiswa: (req, res) => {
+    siswamodels
+      .getsiswa()
       .then((result) => {
         helpers.response(res, result, 200);
       })
       .catch((err) => console.log(err));
   },
-  addguru: (req, res) => {
-    const { nip, nama_guru, email, password } = req.body;
+  addsiswa: (req, res) => {
+    const { nis, id_kelas, nama, email, password } = req.body;
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(password, salt, function (err, hash) {
         const data = {
-          nip,
-          nama_guru,
+          nis,
+          id_kelas,
+          nama,
           email,
           password: hash,
-          rule: "guru",
+          rule: "siswa",
         };
-        conn.query("select nip from guru where nip=?", nip, (err, result) => {
+        conn.query("select nis from siswa where nis=?", nis, (err, result) => {
           if (result.length > 0) {
-            res.json("nip sudah terdaftar");
+            res.json("nis sudah terdaftar");
           } else {
-            gurumodels
-              .addguru(data)
+            siswamodels
+              .addsiswa(data)
               .then((result) => {
                 const dataresponse = { id: result.insertId, ...data };
                 helpers.response(res, dataresponse, 200);
@@ -38,35 +39,36 @@ module.exports = {
       });
     });
   },
-  deleteguru: (req, res) => {
+  deletesiswa: (req, res) => {
     const id = req.query.id;
-    gurumodels
-      .deleteguru(id)
+    siswamodels
+      .deletesiswa(id)
       .then((result) => {
         helpers.response(res, id, 200);
       })
       .catch((err) => console.log(err));
   },
-  updateguru: (req, res) => {
+  updatesiswa: (req, res) => {
     const id = req.query.id;
-    const { nip, nama_guru, email, password } = req.body;
+    const { nis, id_kelas, nama, email, password } = req.body;
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(password, salt, function (err, hash) {
         const data = {
-          nip,
-          nama_guru,
+          nis,
+          id_kelas,
+          nama,
           email,
           password: hash,
         };
         conn.query(
-          "select id,nip from guru where nip=?",
-          nip,
+          "select id,nis from siswa where nis=?",
+          nis,
           (err, result) => {
             if (result.length > 0 && result[0].id != id) {
-              res.json("nip sudah terdaftar");
+              res.json("nis sudah terdaftar");
             } else {
-              gurumodels
-                .updateguru(id, data)
+              siswamodels
+                .updatesiswa(id, data)
                 .then((result) => {
                   const dataresponse = { id, ...data };
                   helpers.response(res, dataresponse, 200);
