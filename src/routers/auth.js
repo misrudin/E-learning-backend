@@ -4,10 +4,10 @@ const auth = require("../helpers/auth");
 const router = express.Router();
 const controlerAuth = require("../controllers/auth");
 
-router.post("/login", controlerAuth.loginUser); // router user
-router.delete('/logout', controlerAuth.logout) // logout
-router.post("/register", controlerAuth.register);
-router.get("/user", controlerAuth.getAll)
-router.get("/user/:id", controlerAuth.getUserByID)
+router.post("/admin", controlerAuth.loginAdmin);
+
+router.post("/siswa", controlerAuth.loginSiswa);
+
+router.post("/guru", controlerAuth.loginGuru);
 
 module.exports = router;
