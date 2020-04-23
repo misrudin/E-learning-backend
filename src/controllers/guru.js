@@ -50,13 +50,11 @@ module.exports = {
   updateguru: (req, res) => {
     const id = req.query.id;
     const { nip, nama_guru, email, password } = req.body;
-    bcrypt.genSalt(10, function (err, salt) {
-      bcrypt.hash(password, salt, function (err, hash) {
         const data = {
           nip,
           nama_guru,
           email,
-          password: hash,
+          password,
         };
         conn.query(
           "select id,nip from guru where nip=?",
@@ -75,7 +73,5 @@ module.exports = {
             }
           }
         );
-      });
-    });
   },
 };

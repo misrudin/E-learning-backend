@@ -18,7 +18,7 @@ module.exports = {
     kelasmodels
       .addkelas(data)
       .then((result) => {
-        const dataresponse = { ...data };
+        const dataresponse = { id:result.insertId,...data };
         helpers.response(res, dataresponse, 200);
       })
       .catch((err) => console.log(err));
