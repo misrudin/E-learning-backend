@@ -11,15 +11,14 @@ module.exports = {
       .catch((err) => console.log(err));
   },
   addmapel: (req, res) => {
-    const { nama_mapel, file } = req.body;
+    const { nama_mapel } = req.body;
     const data = {
       nama_mapel,
-      file,
     };
     mapelmodels
       .addmapel(data)
       .then((result) => {
-        const dataresponse = { ...data };
+        const dataresponse = {id:result.insertId, ...data };
         helpers.response(res, dataresponse, 200);
       })
       .catch((err) => console.log(err));
@@ -35,10 +34,9 @@ module.exports = {
   },
   updatemapel: (req, res) => {
     const id = req.query.id;
-    const { nama_mapel, file } = req.body;
+    const { nama_mapel } = req.body;
     const data = {
       nama_mapel,
-      file,
     };
     mapelmodels
       .updatemapel(id, data)
