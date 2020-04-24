@@ -6,4 +6,5 @@ router.get("/", mapelController.getmapel);
 router.post("/", mapelController.addmapel);
 router.patch("/", mapelController.updatemapel);
 router.delete("/", mapelController.deletemapel);
+
 module.exports = router;
