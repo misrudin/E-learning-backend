@@ -16,4 +16,7 @@ Router.use("/admin", admin);
 const kelas = require("./kelas");
 Router.use("/kelas", kelas);
 
+const mapel = require("./mapel");
+Router.use("/mapel", mapel);
+
 module.exports = Router;
