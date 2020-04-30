@@ -4,13 +4,48 @@ const conn = require("../configs/db");
 const bcrypt = require("bcryptjs");
 module.exports = {
   getsiswa: (req, res) => {
-    siswamodels
-      .getsiswa()
-      .then((result) => {
-        helpers.response(res, result, 200);
-      })
-      .catch((err) => console.log(err));
+    const {page, key} =req.query
+    if(!page){
+      siswamodels
+        .getsiswa()
+        .then((result) => {
+          helpers.response(res, result, 200);
+        })
+        .catch((err) => console.log(err));
+    }else if(key){
+      conn.query("SELECT COUNT(*) as total FROM siswa where nama like ? or nis like ? ",['%' + key + '%','%' + key + '%'], (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        siswamodels.pagination(key,page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => console.log(err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
+    }else{
+      conn.query("SELECT COUNT(*) as total FROM siswa", (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        siswamodels.pagination2(page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => helpers.response(res, {}, 201,err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
+    }
   },
+
+
   addsiswa: (req, res) => {
     const { nis, id_kelas, nama, email, password } = req.body;
     bcrypt.genSalt(10, function (err, salt) {
@@ -80,4 +115,16 @@ module.exports = {
       });
     });
   },
+
+  getDetailSiswa:(req,res)=>{
+    const {id}=req.query
+
+    siswamodels.getDetailSiswa(id)
+    .then((result)=>{
+      helpers.response(res,result,200)
+    })
+    .catch((err)=>{
+      helpers.response(res,{},201,err)
+    })
+  }
 };

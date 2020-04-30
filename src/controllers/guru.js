@@ -4,13 +4,48 @@ const conn = require("../configs/db");
 const bcrypt = require("bcryptjs");
 module.exports = {
   getguru: (req, res) => {
-    gurumodels
-      .getguru()
-      .then((result) => {
-        helpers.response(res, result, 200);
-      })
-      .catch((err) => console.log(err));
+    const {page, key} =req.query
+    if(!page){
+      gurumodels
+        .getguru()
+        .then((result) => {
+          helpers.response(res, result, 200);
+        })
+        .catch((err) => console.log(err));
+    }else if(key){
+      conn.query("SELECT COUNT(*) as total FROM guru where nama_guru like ? or nip like ? ",['%' + key + '%','%' + key + '%'], (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        gurumodels.pagination(key,page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => console.log(err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
+    }else{
+      conn.query("SELECT COUNT(*) as total FROM guru", (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        gurumodels.pagination2(page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => helpers.response(res, {}, 201,err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
+    }
   },
+
+
   addguru: (req, res) => {
     const { nip, nama_guru, email, password } = req.body;
     bcrypt.genSalt(10, function (err, salt) {
@@ -74,4 +109,16 @@ module.exports = {
           }
         );
   },
+
+  getDetailGuru:(req,res)=>{
+    const {id}=req.query
+
+    gurumodels.getDetailGuru(id)
+    .then((result)=>{
+      helpers.response(res,result,200)
+    })
+    .catch((err)=>{
+      helpers.response(res,{},201,err)
+    })
+  }
 };

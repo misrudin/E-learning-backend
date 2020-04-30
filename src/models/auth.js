@@ -14,13 +14,14 @@ module.exports = {
               const passwordInput = data.password;
               const passwordHash = result[0].password;
               const id = result[0].id;
+              const nama = result[0].nama;
               const rule = result[0].rule;
               bcrypt.compare(passwordInput, passwordHash, function (
                 err,
                 resPass
               ) {
                 if (resPass) {
-                  const token = jwt.sign({ id, rule }, process.env.PRIVATE_KEY);
+                  const token = jwt.sign({ id,nama, rule }, process.env.PRIVATE_KEY);
                   const result = {
                     token: token,
                   };
@@ -56,13 +57,14 @@ module.exports = {
               const passwordInput = data.password;
               const passwordHash = result[0].password;
               const id = result[0].id;
+              const nama = result[0].nama;
               const rule = result[0].rule;
               bcrypt.compare(passwordInput, passwordHash, function (
                 err,
                 resPass
               ) {
                 if (resPass) {
-                  const token = jwt.sign({ id, rule }, process.env.PRIVATE_KEY);
+                  const token = jwt.sign({ id,nama, rule }, process.env.PRIVATE_KEY);
                   const result = {
                     token: token,
                   };
@@ -95,13 +97,14 @@ module.exports = {
             const passwordInput = data.password;
             const passwordHash = result[0].password;
             const id = result[0].id;
+            const nama = result[0].nama_guru;
             const rule = result[0].rule;
             bcrypt.compare(passwordInput, passwordHash, function (
               err,
               resPass
             ) {
               if (resPass) {
-                const token = jwt.sign({ id, rule }, process.env.PRIVATE_KEY);
+                const token = jwt.sign({ id,nama, rule }, process.env.PRIVATE_KEY);
                 const result = {
                   token: token,
                 };

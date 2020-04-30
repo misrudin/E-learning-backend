@@ -48,4 +48,17 @@ module.exports = {
       );
     });
   },
+
+  getDetailAdmin: (id) => {
+    return new Promise((resolve, reject) => {
+      conn.query("select * from admin where id=?",id, (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(new Error(err));
+        }
+      });
+    });
+  },
+
 };
