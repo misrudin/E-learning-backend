@@ -19,4 +19,10 @@ Router.use("/kelas", kelas);
 const mapel = require("./mapel");
 Router.use("/mapel", mapel);
 
+const listMapel = require("./list_mapel");
+Router.use("/listmapel", listMapel);
+
+const akses = require("./akses");
+Router.use("/akses", akses);
+
 module.exports = Router;

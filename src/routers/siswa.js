@@ -3,6 +3,7 @@ const router = express.Router();
 
 const siswaController = require("../controllers/siswa");
 router.get("/", siswaController.getsiswa);
+router.get("/detail", siswaController.getDetailSiswa);
 router.post("/", siswaController.addsiswa);
 router.patch("/", siswaController.updatesiswa);
 router.delete("/", siswaController.deletesiswa);

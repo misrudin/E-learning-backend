@@ -80,4 +80,18 @@ module.exports = {
       });
     });
   },
+
+
+  getDetailAdmin:(req,res)=>{
+    const {id}=req.query
+
+    adminmodels.getDetailAdmin(id)
+    .then((result)=>{
+      helpers.response(res,result,200)
+    })
+    .catch((err)=>{
+      helpers.response(res,{},201,err)
+    })
+  }
 };
+
