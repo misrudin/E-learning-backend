@@ -25,7 +25,12 @@ Router.use("/listmapel", listMapel);
 const akses = require("./akses");
 Router.use("/akses", akses);
 
+<<<<<<< HEAD
 const importData = require("./import");
 Router.use("/import", importData);
+=======
+const sekolah = require("./sekolah");
+Router.use("/sekolah", sekolah);
+>>>>>>> 952fba9abdc8a7298bfb29e6d34b54b5be1fdd1f
 
 module.exports = Router;
