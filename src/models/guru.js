@@ -101,7 +101,7 @@ module.exports = {
 
   getDetailGuru: (id) => {
     return new Promise((resolve, reject) => {
-      conn.query("select * from guru where id=?",id, (err, result) => {
+      conn.query("select guru.nama_guru as nama, guru.email,guru.password,guru.rule,guru.nip from guru where id=?",id, (err, result) => {
         if (!err) {
           resolve(result);
         } else {

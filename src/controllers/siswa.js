@@ -126,5 +126,40 @@ module.exports = {
     .catch((err)=>{
       helpers.response(res,{},201,err)
     })
+  },
+
+  editProfile: (req, res) => {
+    const id = req.query.id;
+    const { nama, email, password } = req.body;
+    if(password){
+    bcrypt.genSalt(10, function (err, salt) {
+      bcrypt.hash(password, salt, function (err, hash) {
+        const data = {
+          nama,
+          email,
+          password:hash,
+        };
+              siswamodels
+                .updatesiswa(id, data)
+                .then((result) => {
+                  const dataresponse = { id, ...data };
+                  helpers.response(res, dataresponse, 200);
+                })
+                .catch((err) => console.log(err));
+      })
+    })
+    }else{
+      const data = {
+          nama,
+          email,
+        };
+              siswamodels
+                .updatesiswa(id, data)
+                .then((result) => {
+                  const dataresponse = { id, ...data };
+                  helpers.response(res, dataresponse, 200);
+                })
+                .catch((err) => console.log(err));
+    }
   }
 };

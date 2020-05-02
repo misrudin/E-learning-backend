@@ -25,4 +25,7 @@ Router.use("/listmapel", listMapel);
 const akses = require("./akses");
 Router.use("/akses", akses);
 
+const importData = require("./import");
+Router.use("/import", importData);
+
 module.exports = Router;

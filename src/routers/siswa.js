@@ -6,5 +6,6 @@ router.get("/", siswaController.getsiswa);
 router.get("/detail", siswaController.getDetailSiswa);
 router.post("/", siswaController.addsiswa);
 router.patch("/", siswaController.updatesiswa);
+router.patch("/edit", siswaController.editProfile);
 router.delete("/", siswaController.deletesiswa);
 module.exports = router;

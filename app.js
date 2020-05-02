@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.SERVER_PORT;
+const morgan = require('morgan');
 
 app.use("/uploads", express.static("./uploads"));
 
@@ -16,6 +17,7 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(morgan('combined'));
 
 const router = require("./src/routers/index.js");
 

@@ -120,5 +120,41 @@ module.exports = {
     .catch((err)=>{
       helpers.response(res,{},201,err)
     })
+  },
+
+  editProfile: (req, res) => {
+    const id = req.query.id;
+    const { nama, email, password } = req.body;
+    if(password){
+    bcrypt.genSalt(10, function (err, salt) {
+      bcrypt.hash(password, salt, function (err, hash) {
+        const data = {
+          nama_guru:nama,
+          email,
+          password:hash,
+        };
+              gurumodels
+                .updateguru(id, data)
+                .then((result) => {
+                  const dataresponse = { id, ...data };
+                  helpers.response(res, dataresponse, 200);
+                })
+                .catch((err) => console.log(err));
+      })
+    })
+    }else{
+      const data = {
+          nama_guru:nama,
+          email,
+        };
+              gurumodels
+                .updateguru(id, data)
+                .then((result) => {
+                  const dataresponse = { id, ...data };
+                  helpers.response(res, dataresponse, 200);
+                })
+                .catch((err) => console.log(err));
+    }
   }
+
 };

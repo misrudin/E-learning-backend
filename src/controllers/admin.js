@@ -53,13 +53,14 @@ module.exports = {
   updateadmin: (req, res) => {
     const id = req.query.id;
     const { nama, email, password } = req.body;
+    if(password){
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(password, salt, function (err, hash) {
-        const data = {
+          const data = {
           nama,
           email,
           password: hash,
-        };
+        }
         conn.query(
           "select id,email from admin where email=?",
           email,
@@ -79,6 +80,29 @@ module.exports = {
         );
       });
     });
+    }else{
+          const data = {
+          nama,
+          email,
+        };
+        conn.query(
+          "select id,email from admin where email=?",
+          email,
+          (err, result) => {
+            if (result.length > 0 && result[0].id != id) {
+              res.json("email sudah terdaftar");
+            } else {
+              adminmodels
+                .updateadmin(id, data)
+                .then((result) => {
+                  const dataresponse = { id, ...data };
+                  helpers.response(res, dataresponse, 200);
+                })
+                .catch((err) => console.log(err));
+            }
+          }
+        );
+    }
   },
 
 
@@ -92,6 +116,7 @@ module.exports = {
     .catch((err)=>{
       helpers.response(res,{},201,err)
     })
-  }
+  },
+
 };
 
