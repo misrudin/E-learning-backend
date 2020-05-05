@@ -20,5 +20,6 @@ const upload = multer({storage: storage})
 
 
 router.post("/",upload.single('file'), importController.importExcel);
+router.post("/guru",upload.single('file'), importController.importGuru);
 
 module.exports = router;

@@ -61,4 +61,59 @@ module.exports = {
     });
   },
 
+
+  pagination: (key,nomor, total) => {
+
+        const dataPage = 5;// jumlah data per halaman
+
+        const totalPage = total / dataPage; // mengitung jumlah halaman
+
+        const firstData = (dataPage * nomor) - dataPage; // menentukan awal data tiap halaman
+
+
+        return new Promise((resolve, reject) => {
+            conn.query("SELECT * FROM admin where nama like ? LIMIT ?, ?", ['%' + key + '%',firstData, dataPage], (err, result) => {
+                if (!err) {
+                    const page = Math.ceil(totalPage);
+                    let pages=[]
+                    for (let i = 1; i <= page; i++) {
+                      pages.push({page:i})
+                    }
+                    if (parseInt(nomor) <= page) {
+                        resolve([page, parseInt(nomor), result,pages]);
+                    }
+                } else {
+                    reject(new Error(err));
+                }
+            })
+        })
+    },
+
+    pagination2: (nomor, total) => {
+
+        const dataPage = 5;// jumlah data per halaman
+
+        const totalPage = total / dataPage; // mengitung jumlah halaman
+
+        const firstData = (dataPage * nomor) - dataPage; // menentukan awal data tiap halaman
+
+
+        return new Promise((resolve, reject) => {
+            conn.query("SELECT * FROM admin LIMIT ?, ?", [firstData, dataPage], (err, result) => {
+                if (!err) {
+                    const page = Math.ceil(totalPage);
+                    let pages=[]
+                    for (let i = 1; i <= page; i++) {
+                      pages.push({page:i})
+                    }
+                    if (parseInt(nomor) <= page) {
+                        resolve([page, parseInt(nomor), result,pages]);
+                    }
+                } else {
+                    reject(new Error(err));
+                }
+            })
+        })
+    },
+
 };

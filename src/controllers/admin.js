@@ -4,13 +4,49 @@ const conn = require("../configs/db");
 const bcrypt = require("bcryptjs");
 module.exports = {
   getadmin: (req, res) => {
-    adminmodels
-      .getadmin()
-      .then((result) => {
-        helpers.response(res, result, 200);
-      })
-      .catch((err) => console.log(err));
+    const {page, key} =req.query
+    if(!page){
+      adminmodels
+        .getadmin()
+        .then((result) => {
+          helpers.response(res, result, 200);
+        })
+        .catch((err) => console.log(err));
+    }else if(key){
+      conn.query("SELECT COUNT(*) as total FROM admin where nama like ?",'%' + key + '%', (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        adminmodels.pagination(key,page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => console.log(err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
+    }else{
+      conn.query("SELECT COUNT(*) as total FROM admin", (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        adminmodels.pagination2(page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => helpers.response(res, {}, 201,err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
+    }
   },
+
+
+
   addadmin: (req, res) => {
     const { nama, email, password } = req.body;
     bcrypt.genSalt(10, function (err, salt) {

@@ -11,33 +11,51 @@ module.exports = {
       .catch((err) => console.log(err));
   },
   addsekolah: (req, res) => {
-    const { npsn, nama_sekolah, alamat, logo } = req.body;
+    const { npsn, nama_sekolah, alamat } = req.body;
     const data = {
       npsn,
       nama_sekolah,
       alamat,
-      logo,
+      logo:process.env.URL_FILE + `uploads/${req.file.filename}`,
     };
     sekolahmodels
       .addsekolah(data)
       .then((result) => {
-        const dataresponse = { ...data };
+        const dataresponse = { id:result.insertId,...data };
         helpers.response(res, dataresponse, 200);
       })
       .catch((err) => console.log(err));
   },
   updatesekolah: (req, res) => {
-    const npsn = req.query.npsn;
-    const { nama_sekolah } = req.body;
+    const id = req.query.id;
+    const { npsn,nama_sekolah, alamat } = req.body;
+    if(req.file !== undefined){
     const data = {
+      npsn,
       nama_sekolah,
+      alamat,
+      logo:process.env.URL_FILE + `uploads/${req.file.filename}`,
     };
     sekolahmodels
-      .updatesekolah(npsn, data)
+      .updatesekolah(id, data)
       .then((result) => {
-        const dataresponse = { npsn, ...data };
+        const dataresponse = { id, ...data };
         helpers.response(res, dataresponse, 200);
       })
       .catch((err) => console.log(err));
+    }else{
+      const data = {
+      npsn,
+      nama_sekolah,
+      alamat,
+    };
+    sekolahmodels
+      .updatesekolah(id, data)
+      .then((result) => {
+        const dataresponse = { id, ...data };
+        helpers.response(res, dataresponse, 200);
+      })
+      .catch((err) => console.log(err));
+    }
   },
 };

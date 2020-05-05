@@ -4,7 +4,7 @@ const conn = require("../configs/db");
 const bcrypt = require("bcryptjs");
 module.exports = {
   getsiswa: (req, res) => {
-    const {page, key} =req.query
+    const {page, key,kelas} =req.query
     if(!page){
       siswamodels
         .getsiswa()
@@ -12,8 +12,40 @@ module.exports = {
           helpers.response(res, result, 200);
         })
         .catch((err) => console.log(err));
+    }else if(kelas && key){
+      console.log(kelas)
+      conn.query("SELECT COUNT(*) as total FROM siswa where id_kelas = ? and nama like ? or nis like ?",[kelas,'%' + key + '%','%' + key + '%'], (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        siswamodels.pagination4(kelas,key,page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => console.log(err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
+    }else if(kelas){
+      console.log(kelas)
+      conn.query("SELECT COUNT(*) as total FROM siswa where id_kelas = ?",kelas, (err, result) => {
+                const total = result[0].total;
+                if(total >0){
+                    if (page > 0) {
+                        siswamodels.pagination3(kelas,page,total)
+                            .then((result) => {
+                                helpers.response(res, result, 200)
+                            })
+                            .catch(err => console.log(err));
+                    }
+            }else{
+                helpers.response(res, [1,"Curren Page: 1",[]], 200)
+            }
+        }); 
     }else if(key){
-      conn.query("SELECT COUNT(*) as total FROM siswa where nama like ? or nis like ? ",['%' + key + '%','%' + key + '%'], (err, result) => {
+      conn.query("SELECT COUNT(*) as total FROM siswa where nama like ? or nis like ?",['%' + key + '%','%' + key + '%'], (err, result) => {
                 const total = result[0].total;
                 if(total >0){
                     if (page > 0) {
@@ -49,7 +81,7 @@ module.exports = {
   addsiswa: (req, res) => {
     const { nis, id_kelas, nama, email, password } = req.body;
     bcrypt.genSalt(10, function (err, salt) {
-      bcrypt.hash(password, salt, function (err, hash) {
+      bcrypt.hash(password.toString(), salt, function (err, hash) {
         const data = {
           nis,
           id_kelas,
@@ -60,12 +92,14 @@ module.exports = {
         };
         conn.query("select nis from siswa where nis=?", nis, (err, result) => {
           if (result.length > 0) {
-            res.json("nis sudah terdaftar");
+            // res.json("nis sudah terdaftar");
+            const dataresponse = { id: result.insertId, ...data,status:0 };
+            helpers.response(res, dataresponse, 200);
           } else {
             siswamodels
               .addsiswa(data)
               .then((result) => {
-                const dataresponse = { id: result.insertId, ...data };
+                const dataresponse = { id: result.insertId, ...data,status:1 };
                 helpers.response(res, dataresponse, 200);
               })
               .catch((err) => console.log(err));

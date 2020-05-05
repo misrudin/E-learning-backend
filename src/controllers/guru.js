@@ -49,7 +49,7 @@ module.exports = {
   addguru: (req, res) => {
     const { nip, nama_guru, email, password } = req.body;
     bcrypt.genSalt(10, function (err, salt) {
-      bcrypt.hash(password, salt, function (err, hash) {
+      bcrypt.hash(password.toString(), salt, function (err, hash) {
         const data = {
           nip,
           nama_guru,
@@ -59,12 +59,13 @@ module.exports = {
         };
         conn.query("select nip from guru where nip=?", nip, (err, result) => {
           if (result.length > 0) {
-            res.json("nip sudah terdaftar");
+            const dataresponse = { id: result.insertId, ...data,status:0 };
+            helpers.response(res, dataresponse, 200);
           } else {
             gurumodels
               .addguru(data)
               .then((result) => {
-                const dataresponse = { id: result.insertId, ...data };
+                const dataresponse = { id: result.insertId, ...data,status:1 };
                 helpers.response(res, dataresponse, 200);
               })
               .catch((err) => console.log(err));
