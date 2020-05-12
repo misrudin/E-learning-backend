@@ -5,6 +5,7 @@ const tugasController = require("../controllers/tugas");
 
 // get data
 Router.get("/", tugasController.getTugas);
+Router.get("/type", tugasController.getTypeTugas);
 Router.get("/esay", tugasController.getEsay);
 Router.get("/pg", tugasController.getPg);
 Router.get("/esay/jawab", tugasController.getJawaban);

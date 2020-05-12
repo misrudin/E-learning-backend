@@ -77,14 +77,26 @@ module.exports = {
   updatemapel: (req, res) => {
     const id = req.query.id;
     const { id_mapel,id_kelas,id_guru,type,description } = req.body;
-    const data = {
-      id_mapel,
+    let data = {};
+    {
+    req.file !== undefined ? 
+      data={
+        id_mapel,
       id_kelas,
       id_guru,
       type,
       file:process.env.URL_FILE + `uploads/${req.file.filename}`,
       description
-    };
+      }
+      :
+      data={
+        id_mapel,
+      id_kelas,
+      id_guru,
+      type,
+      description
+      }
+    }
     mapelmodels
       .updatemapel(id, data)
       .then((result) => {

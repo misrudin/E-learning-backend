@@ -12,6 +12,7 @@ module.exports = {
       })
       .catch((err) => helper.response(res, {}, 201, err));
   },
+
   getEsay: (req, res) => {
     const { tugas } = req.query;
     tugasModel
@@ -56,7 +57,7 @@ module.exports = {
       id_mapel,
       id_kelas,
       id_guru,
-      description,
+      type,
       batas_waktu,
       status,
     } = req.body;
@@ -64,7 +65,7 @@ module.exports = {
       id_mapel,
       id_kelas,
       id_guru,
-      description,
+      type,
       batas_waktu,
       status,
     };
@@ -148,18 +149,22 @@ module.exports = {
       id_mapel,
       id_kelas,
       id_guru,
-      description,
+      type,
       batas_waktu,
       status,
     } = req.body;
-    const data = {
+    let data = {};
+
+    {
+      id_mapel ? data={
       id_mapel,
       id_kelas,
       id_guru,
-      description,
+      type,
       batas_waktu,
       status,
-    };
+      } : data={status}
+    }
     tugasModel
       .editTugas(data, id)
       .then((result) => {
@@ -237,4 +242,12 @@ module.exports = {
       })
       .catch((err) => helper.response(res, {}, 201, err));
   },
+  getTypeTugas:(req,res)=>{
+    const {id}=req.query
+    tugasModel.getTypeTugas(id)
+    .then((result)=>{
+      helper.response(res,result,200)
+    })
+    .catch(err=>helper.response(res,{},201,err  ))
+  }
 };

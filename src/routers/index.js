@@ -37,4 +37,7 @@ Router.use("/absen", absen);
 const tugas = require("./tugas");
 Router.use("/tugas", tugas);
 
+const status = require("./status");
+Router.use("/status", status);
+
 module.exports = Router;

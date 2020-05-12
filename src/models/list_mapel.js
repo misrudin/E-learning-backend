@@ -1,8 +1,10 @@
 const conn = require("../configs/db");
+    const date = new Date();
+    const sekarang=date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 module.exports = {
   getmapel: () => {
     return new Promise((resolve, reject) => {
-      conn.query("SELECT list_mapel.id,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru ORDER BY list_mapel.create DESC", (err, result) => {
+      conn.query("SELECT list_mapel.*,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru ORDER BY list_mapel.create DESC", (err, result) => {
         if (!err) {
           resolve(result);
         } else {
@@ -59,7 +61,7 @@ module.exports = {
 
 
         return new Promise((resolve, reject) => {
-            conn.query("SELECT list_mapel.id,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru where list_mapel.id_kelas like ? ORDER BY list_mapel.create DESC LIMIT ?, ?", ['%' + key + '%',firstData, dataPage], (err, result) => {
+            conn.query("SELECT list_mapel.*,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru where list_mapel.id_kelas like ? ORDER BY list_mapel.create DESC LIMIT ?, ?", ['%' + key + '%',firstData, dataPage], (err, result) => {
                 if (!err) {
                     const page = Math.ceil(totalPage);
                     let pages=[]
@@ -86,7 +88,7 @@ module.exports = {
 
 
         return new Promise((resolve, reject) => {
-            conn.query("SELECT list_mapel.id,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru ORDER BY list_mapel.create DESC LIMIT ?, ?", [firstData, dataPage], (err, result) => {
+            conn.query("SELECT list_mapel.*,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru ORDER BY list_mapel.create DESC LIMIT ?, ?", [firstData, dataPage], (err, result) => {
                 if (!err) {
                     const page = Math.ceil(totalPage);
                     let pages=[]
@@ -117,7 +119,7 @@ module.exports = {
 
   getByIdGuru: (guru) => {
     return new Promise((resolve, reject) => {
-      conn.query("SELECT list_mapel.id,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru where list_mapel.id_guru =? ORDER BY list_mapel.create DESC",guru, (err, result) => {
+      conn.query("SELECT list_mapel.id,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru where list_mapel.id_guru =? and list_mapel.create >= ? ORDER BY list_mapel.create DESC",[guru,sekarang], (err, result) => {
         if (!err) {
           resolve(result);
         } else {
@@ -129,7 +131,7 @@ module.exports = {
 
   getByIdKelas: (kelas) => {
     return new Promise((resolve, reject) => {
-      conn.query("SELECT list_mapel.id,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru where list_mapel.id_kelas =? ORDER BY list_mapel.create DESC",kelas, (err, result) => {
+      conn.query("SELECT list_mapel.id,mapel.nama_mapel,kelas.nama_kelas,guru.nama_guru,list_mapel.type,list_mapel.file,list_mapel.description,date_format(list_mapel.create,'%d %M %Y %H:%i') as time_create FROM list_mapel INNER JOIN mapel ON mapel.id = list_mapel.id_mapel INNER JOIN kelas on kelas.id=list_mapel.id_kelas INNER JOIN guru on guru.id=list_mapel.id_guru where list_mapel.id_kelas =? and list_mapel.create >= ? ORDER BY list_mapel.create DESC",[kelas,sekarang], (err, result) => {
         if (!err) {
           resolve(result);
         } else {
